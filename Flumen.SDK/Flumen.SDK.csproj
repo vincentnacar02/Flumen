@@ -43,6 +43,8 @@
   <ItemGroup>
     <Compile Include="Activity.cs" />
     <Compile Include="Entities\ActivityResult.cs" />
+    <Compile Include="Entities\Condition.cs" />
+    <Compile Include="Entities\ConditionOperator.cs" />
     <Compile Include="Entities\ResultStatus.cs" />
     <Compile Include="Events\Event.cs" />
     <Compile Include="Events\ExecuteEvent.cs" />

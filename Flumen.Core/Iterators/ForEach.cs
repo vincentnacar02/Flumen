@@ -1,4 +1,5 @@
-﻿using Flumen.SDK.Entities;
+﻿using Flumen.SDK;
+using Flumen.SDK.Entities;
 using Flumen.SDK.Events;
 using Flumen.SDK.Hooks;
 using System;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Flumen.Core.Iterators
 {
-    public class ForEach<T>
+    public class ForEach<T> : Activity
     {
         public IEnumerable<T> Items { get; set; }
 
@@ -20,7 +21,7 @@ namespace Flumen.Core.Iterators
             this._hooks.Add(hook);
         }
 
-        public ActivityResult Execute(IEvent e)
+        public override ActivityResult Execute(IEvent e)
         {
             try
             {
