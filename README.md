@@ -1,81 +1,107 @@
 # Flumen
 A decoupled control flow engine
 
-### A working example
+### A Basic Example
 ``` c#
-namespace Flumen
+// setup data
+var person1 = new Person
 {
-    class Program
-    {
-        class TestAssign : SDK.IO.Assign
-        {
-            public override void OnEach(object item)
-            {
-                if (item.Equals("Vincent"))
-                {
-                    Execute(new Flumen.SDK.Events.ExecuteEvent
-                    {
-                        EventData = item
-                    });
-                }
-            }
-        }
-        static void Main(string[] args)
-        {
-            // a variable registry is initialized
-            Dictionary<object, object> variables = new Dictionary<object, object>();
-            variables.Add("Name", null);
+	FirstName = "Vincent",
+	LastName = "Nacar"
+};
+var person2 = new Person
+{
+	FirstName = "Enteng",
+	LastName = "Nacar"
+};
 
-            List<string> items = new List<string>
-            {
-                "Im", "Vincent", "Nacar"
-            };
+// create a condition
+// if Person.FirstName == "Vincent"
+Flumen.Core.Condition.IFActivity condition = new Core.Condition.IFActivity();
+condition.Condition = new SDK.Entities.Condition
+{
+	Selector = SDK.Utils.Selector.PropertyName("FirstName"),
+	Operator = SDK.Entities.ConditionOperator.EQ,
+	ExpectedValue = "Vincent"
+};
 
-            // create a foreach activity and inject a list 
-            Flumen.Core.Iterators.ForEach<String> foreachActivity = new Core.Iterators.ForEach<string>();
-            foreachActivity.Items = items;
+// if true execute below
+condition.AddDoNode(new SDK.IO.Printer
+{
+	Selector = SDK.Utils.Selector.PropertyName("FirstName"),
+	Template = "Hello $FirstName"
+});
+// or else
+condition.AddElseNode(new SDK.IO.Printer
+{
+	Selector = SDK.Utils.Selector.PropertyName("FirstName"),
+	Template = "Hi $FirstName"
+});
 
-            // add printer hook to the foreach activiy
-            // to prints each item
-            foreachActivity.AddHook(new Flumen.SDK.IO.Printer());
+// execute condition using person1 data
+condition.Execute(new SDK.Events.ExecuteEvent
+{
+	EventData = person1,
+	EventDataType = typeof(Person)
+});
+// Output: Hello Vincent
 
-            // create assign activity
-            // inject variable registry to assign activiy
-            // add variable name; the value will be added in variable registry dictionary and variable name act as a key
-            Flumen.SDK.IO.Assign assign = new TestAssign(); //Flumen.SDK.IO.Assign();
-            assign.Variables = variables;
-            assign.VariableName = "Name";
+// execute condition using person2 data
+condition.Execute(new SDK.Events.ExecuteEvent
+{
+	EventData = person2,
+	EventDataType = typeof(Person)
+});
+// Output: Hi Enteng
+```
+### Using a loop example
+``` c#
+List<Person> persons = new List<Person>()
+{
+	new Person
+	{
+		FirstName = "Vincent",
+		LastName = "Nacar"
+	},
+	new Person
+	{
+		FirstName = "Enteng",
+		LastName = "Nacar"
+	}
+};
 
-            // inject to foreach activity
-            foreachActivity.AddHook(assign);
+// create a foreach activity and inject a list 
+Flumen.Core.Iterators.ForEach<Person> foreachActivity = new Core.Iterators.ForEach<Person>();
+foreachActivity.ItemType = typeof(Person);
+foreachActivity.Items = persons;
 
-            // create condition activity
-            // to check if current item is equal to Nacar
-            // if true then stored in LastName
-            Flumen.Core.Condition.IFActivity ifCondition = new Core.Condition.IFActivity();
-            ifCondition.Condition = new SDK.Entities.Condition
-            {
-                Operator = SDK.Entities.ConditionOperator.EQ,
-                ExpectedValue = "Nacar"
-            };
-            ifCondition.AddDoNode(new Flumen.SDK.IO.Assign
-            {
-                Variables = variables,
-                VariableName = "LastName"
-            });
+// add printer hook to the foreach activiy
+// to prints each item FirstName
+Flumen.SDK.IO.Printer printer = new Flumen.SDK.IO.Printer();
+printer.Selector = SDK.Utils.Selector.PropertyName("FirstName");
+foreachActivity.AddHook(printer);
 
-            // inject to foreach activity
-            foreachActivity.AddHook(ifCondition);
+// create condition activity
+// to check if current item FirstName is equal to Vincent
+// if true then stored in FirstName
+Flumen.Core.Condition.IFActivity ifCondition = new Core.Condition.IFActivity();
+ifCondition.Condition = new SDK.Entities.Condition
+{
+	Selector = SDK.Utils.Selector.PropertyName("FirstName"),
+	Operator = SDK.Entities.ConditionOperator.EQ,
+	ExpectedValue = "Enteng"
+};
 
-            // execute foreach activity
-            Flumen.SDK.Entities.ActivityResult resut = foreachActivity.Execute(new Flumen.SDK.Events.StartEvent());
-            Console.WriteLine("Execution Status: {0}", resut.GetStatus());
+Flumen.SDK.IO.Printer printer2 = new Flumen.SDK.IO.Printer("Hello World, $FirstName");
+printer2.Selector = SDK.Utils.Selector.PropertyName("FirstName");
 
-            // print variable "Name"
-            Console.WriteLine("Name variable value: {0}", variables["Name"]);
-            Console.WriteLine("LastName variable value: {0}", variables["LastName"]);
-            Console.Read();
-        }
-    }
-}
+ifCondition.AddDoNode(printer2);
+// inject to foreach activity
+foreachActivity.AddHook(ifCondition);
+
+// execute foreach activity
+Flumen.SDK.Entities.ActivityResult resut = foreachActivity.Execute(new Flumen.SDK.Events.StartEvent());
+Console.WriteLine("Execution Status: {0}", resut.GetStatus());
+if (resut.GetException() != null)
+	Console.WriteLine("Execution Exception: {0}", resut.GetException().Message);
 ```
