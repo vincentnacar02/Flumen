@@ -1,4 +1,6 @@
-﻿using Flumen.SDK.Hooks;
+﻿using Flumen.SDK.Entities;
+using Flumen.SDK.Events;
+using Flumen.SDK.Hooks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,20 +9,16 @@ using System.Threading.Tasks;
 
 namespace Flumen.SDK.IO
 {
-    public class Assign : IStatement, ForEachHook
+    public class Assign : Activity
     {
         public IDictionary<object, object> Variables { get; set; }
 
         public String VariableName { get; set; }
 
-        public void AssignValue(object value)
+        public override ActivityResult Execute(IEvent e)
         {
-            Variables[VariableName] = value;
-        }
-
-        public virtual void OnEach(object item)
-        {
-            AssignValue(item);
+            Variables[VariableName] = e.GetEventData();
+            return ActivityResult.Success();
         }
     }
 }

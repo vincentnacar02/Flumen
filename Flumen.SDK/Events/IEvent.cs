@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Flumen.SDK
+namespace Flumen.SDK.Events
 {
-    public interface IStatement
+    public interface IEvent
     {
+        object GetEventData();
     }
 }

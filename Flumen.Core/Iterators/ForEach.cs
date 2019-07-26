@@ -1,4 +1,6 @@
-﻿using Flumen.SDK.Hooks;
+﻿using Flumen.SDK.Entities;
+using Flumen.SDK.Events;
+using Flumen.SDK.Hooks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +20,7 @@ namespace Flumen.Core.Iterators
             this._hooks.Add(hook);
         }
 
-        public bool Execute()
+        public ActivityResult Execute(IEvent e)
         {
             try
             {
@@ -30,11 +32,11 @@ namespace Flumen.Core.Iterators
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                return ActivityResult.Failure(ex);
             }
-            return true;
+            return ActivityResult.Success();
         }
     }
 }

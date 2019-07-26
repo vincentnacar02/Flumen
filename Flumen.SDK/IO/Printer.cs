@@ -1,4 +1,6 @@
-﻿using Flumen.SDK.Hooks;
+﻿using Flumen.SDK.Entities;
+using Flumen.SDK.Events;
+using Flumen.SDK.Hooks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,11 +9,12 @@ using System.Threading.Tasks;
 
 namespace Flumen.SDK.IO
 {
-    public class Printer : IStatement, ForEachHook
+    public class Printer : Activity
     {
-        public void OnEach(object item)
+        public override ActivityResult Execute(IEvent e)
         {
-            Console.WriteLine(item.ToString());
+            Console.WriteLine(e.GetEventData().ToString());
+            return ActivityResult.Success();
         }
     }
 }

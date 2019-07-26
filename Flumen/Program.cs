@@ -15,7 +15,10 @@ namespace Flumen
             {
                 if (item.Equals("Vincent"))
                 {
-                    AssignValue(item);
+                    Execute(new Flumen.SDK.Events.ExecuteEvent
+                    {
+                        EventData = item
+                    });
                 }
             }
         }
@@ -39,7 +42,8 @@ namespace Flumen
 
             test1.AddHook(assign);
 
-            test1.Execute();
+            Flumen.SDK.Entities.ActivityResult resut = test1.Execute(new Flumen.SDK.Events.StartEvent());
+            Console.WriteLine("Execution Status: {0}", resut.GetStatus());
 
             Console.WriteLine("Name variable value: {0}", variables["Name"]);
             Console.Read();
