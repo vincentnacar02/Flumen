@@ -115,19 +115,19 @@ namespace Flumen
 
             // create condition activity
             // to check if current item FirstName is equal to Vincent
-            // if true then stored in FirstName
             Flumen.Core.Condition.IFActivity ifCondition = new Core.Condition.IFActivity();
             ifCondition.Condition = new SDK.Entities.Condition
             {
                 Selector = SDK.Utils.Selector.PropertyName("FirstName"),
                 Operator = SDK.Entities.ConditionOperator.EQ,
-                ExpectedValue = "Enteng"
+                ExpectedValue = "Vincent"
             };
 
+            // if true then print message
             Flumen.SDK.IO.Printer printer2 = new Flumen.SDK.IO.Printer("Hello World, $FirstName");
             printer2.Selector = SDK.Utils.Selector.PropertyName("FirstName");
-
             ifCondition.AddDoNode(printer2);
+
             // inject to foreach activity
             foreachActivity.AddHook(ifCondition);
 
