@@ -11,6 +11,8 @@ namespace Flumen.SDK
 {
     public class Activity : IActivity, ForEachHook
     {
+        public String Selector { get; set; }
+
         public virtual ActivityResult Execute(IEvent e)
         {
             return ActivityResult.Success();

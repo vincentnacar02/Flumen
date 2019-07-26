@@ -8,7 +8,7 @@ namespace Flumen.SDK.Entities
 {
     public class Condition
     {
-        public String Field { get; set; }
+        public String Selector { get; set; }
         public ConditionOperator Operator { get; set; }
         public object ExpectedValue { get; set; }
 

@@ -9,6 +9,8 @@ namespace Flumen.SDK.Events
 {
     public class Event : IEvent
     {
+        public Dictionary<object, object> Variables { get; set; }
+
         public Type EventDataType { get; set; }
 
         public object EventData { get; set; }
@@ -19,6 +21,22 @@ namespace Flumen.SDK.Events
         }
 
         public object GetEventData(String field)
+        {
+            object data = null;
+
+            if (field.StartsWith("$")) {
+                field = field.Replace("$", "");
+                data = SelectByProperty(field);
+            } else if (field.StartsWith("@"))
+            {
+                field = field.Replace("@", "");
+                data = Variables[field];
+            }
+
+            return data;
+        }
+
+        private object SelectByProperty(String field)
         {
             if (EventDataType == null)
             {

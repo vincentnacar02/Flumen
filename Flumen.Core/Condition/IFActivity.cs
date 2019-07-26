@@ -54,7 +54,7 @@ namespace Flumen.Core.Condition
             {
                 if (e.GetEventData() != null)
                 {
-                    object data = Condition.Field != null ? e.GetEventData(Condition.Field) : e.GetEventData();
+                    object data = Condition.Selector != null ? e.GetEventData(Condition.Selector) : e.GetEventData();
                     switch (Condition.Operator)
                     {
                         case ConditionOperator.EQ:

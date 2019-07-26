@@ -17,7 +17,8 @@ namespace Flumen.SDK.IO
 
         public override ActivityResult Execute(IEvent e)
         {
-            Variables[VariableName] = e.GetEventData();
+            var data = Selector != null ? e.GetEventData(Selector) : e.GetEventData();
+            Variables[VariableName] = data;
             return ActivityResult.Success();
         }
     }

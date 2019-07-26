@@ -109,7 +109,7 @@ namespace Flumen
             // add printer hook to the foreach activiy
             // to prints each item FirstName
             Flumen.SDK.IO.Printer printer = new Flumen.SDK.IO.Printer();
-            printer.Field = "FirstName";
+            printer.Selector = SDK.Utils.Selector.PropertyName("FirstName");
             foreachActivity.AddHook(printer);
 
             // create condition activity
@@ -118,13 +118,14 @@ namespace Flumen
             Flumen.Core.Condition.IFActivity ifCondition = new Core.Condition.IFActivity();
             ifCondition.Condition = new SDK.Entities.Condition
             {
-                Field = "FirstName",
+                Selector = SDK.Utils.Selector.PropertyName("FirstName"),
                 Operator = SDK.Entities.ConditionOperator.EQ,
                 ExpectedValue = "Enteng"
             };
 
-            Flumen.SDK.IO.Printer printer2 = new Flumen.SDK.IO.Printer("Hello World, @FirstName");
-            printer2.Field = "FirstName";
+            Flumen.SDK.IO.Printer printer2 = new Flumen.SDK.IO.Printer("Hello World, $FirstName");
+            printer2.Selector = SDK.Utils.Selector.PropertyName("FirstName");
+
             ifCondition.AddDoNode(printer2);
             // inject to foreach activity
             foreachActivity.AddHook(ifCondition);
