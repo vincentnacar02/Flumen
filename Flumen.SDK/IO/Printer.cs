@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Flumen.SDK.IO
 {
-    public class Printer : ForEachHook
+    public class Printer : IStatement, ForEachHook
     {
         public void OnEach(object item)
         {

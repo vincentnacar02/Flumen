@@ -7,15 +7,20 @@ using System.Threading.Tasks;
 
 namespace Flumen.SDK.IO
 {
-    public class Assign : ForEachHook
+    public class Assign : IStatement, ForEachHook
     {
         public IDictionary<object, object> Variables { get; set; }
 
         public String VariableName { get; set; }
 
-        public void OnEach(object item)
+        public void AssignValue(object value)
         {
-            Variables[VariableName] = item;
+            Variables[VariableName] = value;
+        }
+
+        public virtual void OnEach(object item)
+        {
+            AssignValue(item);
         }
     }
 }
