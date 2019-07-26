@@ -8,6 +8,6 @@ namespace Flumen.SDK.Hooks
 {
     public interface ForEachHook
     {
-        void OnEach(object item);
+        void OnEach(object item, Type itemType);
     }
 }

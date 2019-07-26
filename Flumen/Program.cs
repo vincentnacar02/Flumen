@@ -11,7 +11,7 @@ namespace Flumen
     {
         class TestAssign : SDK.IO.Assign
         {
-            public override void OnEach(object item)
+            public override void OnEach(object item, Type itemType)
             {
                 if (item.Equals("Vincent"))
                 {
@@ -23,6 +23,12 @@ namespace Flumen
             }
         }
         static void Main(string[] args)
+        {
+           // Example1();
+            Example2();
+        }
+
+        static void Example1()
         {
             // a variable registry is initialized
             Dictionary<object, object> variables = new Dictionary<object, object>();
@@ -78,5 +84,46 @@ namespace Flumen
             Console.WriteLine("LastName variable value: {0}", variables["LastName"]);
             Console.Read();
         }
+
+        static void Example2()
+        {
+            List<Person> persons = new List<Person>()
+            {
+                new Person
+                {
+                    FirstName = "Vincent",
+                    LastName = "Nacar"
+                },
+                new Person
+                {
+                    FirstName = "Enteng",
+                    LastName = "Nacar"
+                }
+            };
+
+            // create a foreach activity and inject a list 
+            Flumen.Core.Iterators.ForEach<Person> foreachActivity = new Core.Iterators.ForEach<Person>();
+            foreachActivity.ItemType = typeof(Person);
+            foreachActivity.Items = persons;
+
+            // add printer hook to the foreach activiy
+            // to prints each item FirstName
+            Flumen.SDK.IO.Printer printer = new Flumen.SDK.IO.Printer();
+            printer.Field = "FirstName";
+            foreachActivity.AddHook(printer);
+
+            // execute foreach activity
+            Flumen.SDK.Entities.ActivityResult resut = foreachActivity.Execute(new Flumen.SDK.Events.StartEvent());
+            Console.WriteLine("Execution Status: {0}", resut.GetStatus());
+            if (resut.GetException() != null)
+                Console.WriteLine("Execution Exception: {0}", resut.GetException().Message);
+            Console.Read();
+        }
+    }
+
+    public class Person
+    {
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
     }
 }

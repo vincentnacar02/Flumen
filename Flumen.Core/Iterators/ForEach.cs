@@ -12,6 +12,9 @@ namespace Flumen.Core.Iterators
 {
     public class ForEach<T> : Activity
     {
+
+        public Type ItemType { get; set; }
+
         public IEnumerable<T> Items { get; set; }
 
         private IList<ForEachHook> _hooks = new List<ForEachHook>();
@@ -29,7 +32,7 @@ namespace Flumen.Core.Iterators
                 {
                     foreach (var hook in this._hooks)
                     {
-                        hook.OnEach(item);
+                        hook.OnEach(item, ItemType);
                     }
                 }
             }

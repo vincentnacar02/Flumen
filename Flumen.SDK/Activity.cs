@@ -16,11 +16,12 @@ namespace Flumen.SDK
             return ActivityResult.Success();
         }
 
-        public virtual void OnEach(object item)
+        public virtual void OnEach(object item, Type itemType)
         {
             Execute(new ExecuteEvent
             {
-                EventData = item
+                EventData = item,
+                EventDataType = itemType
             });
         }
     }

@@ -9,5 +9,7 @@ namespace Flumen.SDK.Events
     public interface IEvent
     {
         object GetEventData();
+
+        object GetEventData(String field);
     }
 }
