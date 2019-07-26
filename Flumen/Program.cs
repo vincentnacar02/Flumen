@@ -112,6 +112,23 @@ namespace Flumen
             printer.Field = "FirstName";
             foreachActivity.AddHook(printer);
 
+            // create condition activity
+            // to check if current item FirstName is equal to Vincent
+            // if true then stored in FirstName
+            Flumen.Core.Condition.IFActivity ifCondition = new Core.Condition.IFActivity();
+            ifCondition.Condition = new SDK.Entities.Condition
+            {
+                Field = "FirstName",
+                Operator = SDK.Entities.ConditionOperator.EQ,
+                ExpectedValue = "Enteng"
+            };
+
+            Flumen.SDK.IO.Printer printer2 = new Flumen.SDK.IO.Printer("Hello World, @FirstName");
+            printer2.Field = "FirstName";
+            ifCondition.AddDoNode(printer2);
+            // inject to foreach activity
+            foreachActivity.AddHook(ifCondition);
+
             // execute foreach activity
             Flumen.SDK.Entities.ActivityResult resut = foreachActivity.Execute(new Flumen.SDK.Events.StartEvent());
             Console.WriteLine("Execution Status: {0}", resut.GetStatus());

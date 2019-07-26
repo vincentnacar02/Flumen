@@ -54,10 +54,11 @@ namespace Flumen.Core.Condition
             {
                 if (e.GetEventData() != null)
                 {
+                    object data = Condition.Field != null ? e.GetEventData(Condition.Field) : e.GetEventData();
                     switch (Condition.Operator)
                     {
                         case ConditionOperator.EQ:
-                            if (e.GetEventData().Equals(Condition.ExpectedValue))
+                            if (data.Equals(Condition.ExpectedValue))
                             {
                                 ExecuteDoNodes(e);
                             } else
@@ -66,7 +67,7 @@ namespace Flumen.Core.Condition
                             }
                             break;
                         case ConditionOperator.NE:
-                            if (!e.GetEventData().Equals(Condition.ExpectedValue))
+                            if (!data.Equals(Condition.ExpectedValue))
                             {
                                 ExecuteDoNodes(e);
                             }

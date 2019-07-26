@@ -13,14 +13,28 @@ namespace Flumen.SDK.IO
     {
         public string Field { get; set; }
 
+        public string Template { get; set; }
+
+        public Printer()
+        {
+
+        }
+
+        public Printer(String template)
+        {
+            this.Template = template;
+        }
+
         public override ActivityResult Execute(IEvent e)
         {
-            if (Field != null)
+            var text = Field != null ? e.GetEventData(Field).ToString() : e.GetEventData().ToString();
+            if (Template != null)
             {
-                Console.WriteLine(e.GetEventData(Field).ToString());
-            } else
+                Console.WriteLine(Template.Replace("@" + Field, text));
+            }
+            else
             {
-                Console.WriteLine(e.GetEventData().ToString());
+                Console.WriteLine(text);
             }
             return ActivityResult.Success();
         }
